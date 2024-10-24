@@ -3,11 +3,22 @@ from mysql.connector import Error
 import os
 from dotenv import load_dotenv
 
-# .env 파일에서 환경 변수 로드 (필요한 경우)
-# load_dotenv('/config/.env')
-load_dotenv()
+
+def load_env_file():
+    """환경 파일을 우선 지정된 경로에서 불러오고 실패 시 기본 경로에서 불러오는 함수"""
+    try:
+        if not load_dotenv('/config/.env'):
+            raise FileNotFoundError("/config/.env 파일을 찾을 수 없습니다.")
+    except FileNotFoundError as e:
+        print(f"Error loading /config/.env: {e}")
+        # 기본 경로에서 다시 시도
+        load_dotenv()
+
+
 def get_db_connection():
     """MySQL 데이터베이스에 연결하는 함수 (환경 변수를 통해 연결)"""
+    load_env_file()  # 환경 변수를 로드하는 함수 호출
+
     try:
         connection = mysql.connector.connect(
             host=os.getenv('MYSQL_HOST'),
