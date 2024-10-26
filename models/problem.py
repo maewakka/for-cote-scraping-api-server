@@ -17,6 +17,8 @@ class Problem:
         }
 
         response = requests.get(url, headers=headers)
+        print(response)
+        print(response.text)
         soup = BeautifulSoup(response.text, 'html.parser')
 
         # 문제 제목 가져오기 (없을 경우 None 처리)
@@ -34,12 +36,12 @@ class Problem:
         problem_input = soup.find('div', id='problem_input')
         if problem_input is None:
             raise Exception(f"Problem input not found for problem_id {self.problem_id}")
-        problem_input = problem_input.text.strip()
+        problem_input = problem_input.text
 
         problem_output = soup.find('div', id='problem_output')
         if problem_output is None:
             raise Exception(f"Problem output not found for problem_id {self.problem_id}")
-        problem_output = problem_output.text.strip()
+        problem_output = problem_output.text
 
         # 예제 입력/출력 처리
         sample_inputs = soup.find_all('pre', id=lambda x: x and x.startswith('sample-input'))
@@ -48,8 +50,8 @@ class Problem:
         examples = []
         for sample_input, sample_output in zip(sample_inputs, sample_outputs):
             examples.append({
-                'input': sample_input.text.strip(),
-                'output': sample_output.text.strip()
+                'input': sample_input.text,
+                'output': sample_output.text
             })
 
         return {

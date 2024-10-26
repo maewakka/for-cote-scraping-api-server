@@ -8,9 +8,8 @@ def load_env_file():
     """환경 파일을 우선 지정된 경로에서 불러오고 실패 시 기본 경로에서 불러오는 함수"""
     try:
         if not load_dotenv('/config/.env'):
-            raise FileNotFoundError("/config/.env 파일을 찾을 수 없습니다.")
+            raise FileNotFoundError()
     except FileNotFoundError as e:
-        print(f"Error loading /config/.env: {e}")
         # 기본 경로에서 다시 시도
         load_dotenv()
 
